@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | AnaliseContrato</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="dashboard">
+      <aside class="sidebar">
+        <div class="logo">AnaliseContrato</div>
+        <nav>
+          <a href="/dashboard.html">Visão geral</a>
+          <a href="/dashboard.html#analise">Nova análise</a>
+          <a href="/">Sair</a>
+        </nav>
+      </aside>
+      <main class="main">
+        <div class="topbar">
+          <div>
+            <h2>Bem-vindo, <span id="user-name">Equipe Jurídica</span></h2>
+            <p class="helper">Última atualização: agora</p>
+          </div>
+          <a href="/cadastro.html" class="btn btn-outline">Novo usuário</a>
+        </div>
+
+        <section class="cards">
+          <div class="card">
+            <h3>Contratos críticos</h3>
+            <p class="helper">12 em revisão</p>
+          </div>
+          <div class="card">
+            <h3>Alertas ativos</h3>
+            <p class="helper">4 pendências</p>
+          </div>
+          <div class="card">
+            <h3>Tempo médio</h3>
+            <p class="helper">2h 15min</p>
+          </div>
+        </section>
+
+        <section class="contract-form" id="analise">
+          <h3>Solicitar análise de contrato</h3>
+          <p class="helper">
+            Envie o link do documento e receba um relatório completo com riscos
+            e recomendações.
+          </p>
+          <div id="contract-alert"></div>
+          <form id="contract-form">
+            <div class="form-group">
+              <label for="nome">Nome do solicitante</label>
+              <input type="text" id="nome" name="nome" required />
+            </div>
+            <div class="form-group">
+              <label for="whatsapp">WhatsApp</label>
+              <input type="tel" id="whatsapp" name="whatsapp" required />
+            </div>
+            <div class="form-group">
+              <label for="file_url">URL do contrato</label>
+              <input
+                type="text"
+                id="file_url"
+                name="file_url"
+                placeholder="itadigital.com.br/doc/Contrato_Prestacao_Servico.pdf"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar análise</button>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <script src="/js/dashboard.js"></script>
+  </body>
+</html>

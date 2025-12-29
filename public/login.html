@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | AnaliseContrato</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <header class="container header">
+      <div class="logo">AnaliseContrato</div>
+      <nav class="nav">
+        <a href="/">Início</a>
+        <a href="/cadastro.html" class="btn btn-outline">Criar Conta</a>
+      </nav>
+    </header>
+
+    <main class="section">
+      <div class="form-wrapper">
+        <h2>Acesse seu painel</h2>
+        <p class="helper">Entre para acompanhar a análise dos seus contratos.</p>
+        <div id="login-alert"></div>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div class="form-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" name="password" required />
+          </div>
+          <button type="submit" class="btn btn-primary">Entrar</button>
+        </form>
+      </div>
+    </main>
+
+    <script src="/js/auth.js"></script>
+  </body>
+</html>

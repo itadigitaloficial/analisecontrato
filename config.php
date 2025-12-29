@@ -4,17 +4,20 @@ $user = 'itaweb64_analiseuser';
 $password = 'x-XLU}O#RKs0';
 $database = 'itaweb64_analisecontrato';
 
-$mysqli = new mysqli($host, $user, $password, $database);
+$dbError = '';
+mysqli_report(MYSQLI_REPORT_OFF);
+$mysqli = @new mysqli($host, $user, $password, $database);
 if ($mysqli->connect_errno) {
-    http_response_code(500);
-    echo 'Erro ao conectar no banco de dados.';
-    exit;
+    $dbError = 'Erro ao conectar no banco de dados. Verifique as credenciais.';
+} else {
+    $mysqli->set_charset('utf8mb4');
 }
 
-$mysqli->set_charset('utf8mb4');
-
-function ensure_users_table(mysqli $mysqli): void
+function ensure_users_table(?mysqli $mysqli): void
 {
+    if (!$mysqli) {
+        return;
+    }
     $sql = "CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         nome VARCHAR(120) NOT NULL,

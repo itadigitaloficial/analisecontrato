@@ -4,24 +4,31 @@ require_once 'includes/header.php';
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($dbError) {
+        $error = $dbError;
+    }
     $email = trim($_POST['email'] ?? '');
     $senha = $_POST['senha'] ?? '';
 
-    if ($email && $senha) {
+    if (!$error && $email && $senha) {
         ensure_users_table($mysqli);
         $stmt = $mysqli->prepare('SELECT id, nome, senha FROM users WHERE email = ? LIMIT 1');
-        $stmt->bind_param('s', $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $user = $result->fetch_assoc();
-        if ($user && password_verify($senha, $user['senha'])) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_name'] = $user['nome'];
-            header('Location: dashboard.php');
-            exit;
+        if ($stmt) {
+            $stmt->bind_param('s', $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $user = $result->fetch_assoc();
+            if ($user && password_verify($senha, $user['senha'])) {
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_name'] = $user['nome'];
+                header('Location: dashboard.php');
+                exit;
+            }
+            $error = 'Email ou senha inválidos.';
+        } else {
+            $error = 'Erro ao acessar o banco de dados.';
         }
-        $error = 'Email ou senha inválidos.';
-    } else {
+    } elseif (!$error) {
         $error = 'Preencha todos os campos.';
     }
 }

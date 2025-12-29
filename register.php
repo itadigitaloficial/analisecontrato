@@ -5,11 +5,14 @@ require_once 'includes/header.php';
 $error = '';
 $success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($dbError) {
+        $error = $dbError;
+    }
     $nome = trim($_POST['nome'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $senha = $_POST['senha'] ?? '';
 
-    if ($nome && $email && $senha) {
+    if (!$error && $nome && $email && $senha) {
         ensure_users_table($mysqli);
         $hash = password_hash($senha, PASSWORD_DEFAULT);
         $stmt = $mysqli->prepare('INSERT INTO users (nome, email, senha) VALUES (?, ?, ?)');
@@ -23,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $error = 'Erro ao preparar o cadastro.';
         }
-    } else {
+    } elseif (!$error) {
         $error = 'Preencha todos os campos.';
     }
 }

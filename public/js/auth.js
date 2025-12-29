@@ -1,5 +1,8 @@
 const loginForm = document.querySelector("#login-form");
 const registerForm = document.querySelector("#register-form");
+const apiMeta = document.querySelector("meta[name=\"api-base\"]");
+const apiBase = apiMeta?.content?.replace(/\/$/, "") || "";
+const buildApiUrl = (path) => (apiBase ? `${apiBase}${path}` : path);
 
 const showAlert = (containerId, message, type) => {
   const container = document.querySelector(containerId);
@@ -23,7 +26,7 @@ if (registerForm) {
     };
 
     try {
-      const response = await fetch("/api/register", {
+      const response = await fetch(buildApiUrl("/api/register"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -57,7 +60,7 @@ if (loginForm) {
     };
 
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch(buildApiUrl("/api/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

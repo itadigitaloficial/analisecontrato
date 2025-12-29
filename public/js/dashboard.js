@@ -1,6 +1,9 @@
 const userName = localStorage.getItem("userName");
 const userId = localStorage.getItem("userId");
 const userNameEl = document.querySelector("#user-name");
+const apiMeta = document.querySelector("meta[name=\"api-base\"]");
+const apiBase = apiMeta?.content?.replace(/\/$/, "") || "";
+const buildApiUrl = (path) => (apiBase ? `${apiBase}${path}` : path);
 
 if (userNameEl && userName) {
   userNameEl.textContent = userName;
@@ -30,7 +33,7 @@ if (contractForm) {
     };
 
     try {
-      const response = await fetch("/api/contract", {
+      const response = await fetch(buildApiUrl("/api/contract"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

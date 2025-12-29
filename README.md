@@ -12,8 +12,8 @@ Sistema de análise de contratos com páginas de cadastro, login e dashboard mod
 Crie o banco e as tabelas abaixo:
 
 ```sql
-CREATE DATABASE analise_contrato;
-USE analise_contrato;
+CREATE DATABASE itaweb64_analisecontrato;
+USE itaweb64_analisecontrato;
 
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -41,7 +41,7 @@ Crie um arquivo `.env` com as credenciais:
 MYSQL_HOST=localhost
 MYSQL_USER=root
 MYSQL_PASSWORD=
-MYSQL_DATABASE=analise_contrato
+MYSQL_DATABASE=itaweb64_analisecontrato
 PORT=3000
 ```
 

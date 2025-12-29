@@ -2,7 +2,7 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
-import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import mysql from "mysql2/promise";
 
 dotenv.config();
@@ -12,6 +12,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const HASH_ITERATIONS = 120000;
 
 const pool = mysql.createPool({
   host: process.env.MYSQL_HOST || "localhost",
@@ -22,6 +23,28 @@ const pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0,
 });
+
+const hashPassword = (password) => {
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto
+    .pbkdf2Sync(password, salt, HASH_ITERATIONS, 64, "sha512")
+    .toString("hex");
+  return `${salt}:${hash}`;
+};
+
+const verifyPassword = (password, storedHash) => {
+  if (!storedHash || !storedHash.includes(":")) {
+    return false;
+  }
+  const [salt, hash] = storedHash.split(":");
+  const computedHash = crypto
+    .pbkdf2Sync(password, salt, HASH_ITERATIONS, 64, "sha512")
+    .toString("hex");
+  return crypto.timingSafeEqual(
+    Buffer.from(hash, "hex"),
+    Buffer.from(computedHash, "hex")
+  );
+};
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -43,7 +66,7 @@ app.post("/api/register", async (req, res) => {
       return res.status(409).json({ message: "E-mail já cadastrado." });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = hashPassword(password);
 
     const [result] = await pool.execute(
       "INSERT INTO users (name, email, password, whatsapp) VALUES (?, ?, ?, ?)",
@@ -75,7 +98,7 @@ app.post("/api/login", async (req, res) => {
     }
 
     const user = rows[0];
-    const isValid = await bcrypt.compare(password, user.password);
+    const isValid = verifyPassword(password, user.password);
 
     if (!isValid) {
       return res.status(401).json({ message: "Credenciais inválidas." });

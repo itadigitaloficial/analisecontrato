@@ -10,14 +10,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $nome = trim($_POST['nome'] ?? '');
     $email = trim($_POST['email'] ?? '');
+    $whatsapp = trim($_POST['whatsapp'] ?? '');
     $senha = $_POST['senha'] ?? '';
 
-    if (!$error && $nome && $email && $senha) {
+    if (!$error && $nome && $email && $whatsapp && $senha) {
         ensure_users_table($mysqli);
         $hash = password_hash($senha, PASSWORD_DEFAULT);
-        $stmt = $mysqli->prepare('INSERT INTO users (nome, email, senha) VALUES (?, ?, ?)');
+        $stmt = $mysqli->prepare('INSERT INTO users (name, email, password, whatsapp) VALUES (?, ?, ?, ?)');
         if ($stmt) {
-            $stmt->bind_param('sss', $nome, $email, $hash);
+            $stmt->bind_param('ssss', $nome, $email, $hash, $whatsapp);
             if ($stmt->execute()) {
                 $success = 'Cadastro realizado! Faça login para continuar.';
             } else {
@@ -48,6 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="text" name="nome" placeholder="Seu nome" required>
             <label>Email</label>
             <input type="email" name="email" placeholder="voce@email.com" required>
+            <label>WhatsApp</label>
+            <input type="text" name="whatsapp" placeholder="(00) 00000-0000" required>
             <label>Senha</label>
             <input type="password" name="senha" placeholder="Crie uma senha" required>
             <button class="btn-primary" type="submit">Cadastrar</button>

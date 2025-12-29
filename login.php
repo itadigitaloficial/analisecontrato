@@ -12,15 +12,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$error && $email && $senha) {
         ensure_users_table($mysqli);
-        $stmt = $mysqli->prepare('SELECT id, nome, senha FROM users WHERE email = ? LIMIT 1');
+        $stmt = $mysqli->prepare('SELECT id, name, password FROM users WHERE email = ? LIMIT 1');
         if ($stmt) {
             $stmt->bind_param('s', $email);
             $stmt->execute();
             $result = $stmt->get_result();
             $user = $result->fetch_assoc();
-            if ($user && password_verify($senha, $user['senha'])) {
+            $passwordMatches = false;
+            if ($user) {
+                $passwordMatches = password_verify($senha, $user['password']) || $senha === $user['password'];
+            }
+            if ($user && $passwordMatches) {
                 $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_name'] = $user['nome'];
+                $_SESSION['user_name'] = $user['name'];
                 header('Location: dashboard.php');
                 exit;
             }
